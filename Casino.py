@@ -1,4 +1,4 @@
-﻿import random
+import random
 import time
 
 def make_a_bet(balance: int) -> int:
@@ -8,8 +8,8 @@ def make_a_bet(balance: int) -> int:
         except (ValueError, TypeError):
             print('Следите за руками')
             return 0
-        if stavka > balance:
-            print('У вас нет столько')
+        if 0 < stavka > balance:
+            print('Проверьте корректность вашей ставки')
         else:
             return stavka
 
@@ -17,6 +17,8 @@ def Avtomat(balance: int) -> int:
     print('При совпадении трёх чисел вы получаете удвоенную ставку')
     print('Поиграем в автоматы')
     stavka = make_a_bet(balance)
+    if stavka == 0:
+        return 0
     ch1 = random.randint(0, 6)
     ch2 = random.randint(0, 6)
     ch3 = random.randint(0, 6)
@@ -40,6 +42,8 @@ def Ochko(balance: int) -> int:
     random.shuffle(koloda)
     print('Поиграем в очко')
     stavka = make_a_bet(balance)
+    if stavka == 0:
+        return 0
     countUser = 0
     countKrup = 0
     while True:
@@ -74,31 +78,32 @@ def Ochko(balance: int) -> int:
 
 def main(balance):
     while True:
-        try:
-            print(f'Ваш текущий баланс: {balance}')
-            if balance <= 0:
-                print('Вас выводит охрана')
-                input()
-                break
-            elif balance >= 100000:
-                print('Охрана заводит вас в отдалённую комнату, запирает дверь, избивает вас и отнимает все деньги. После чего выкидывает на улицу')
-                input()
-                break
-            print('Если хотите сыграть в очко введите: "Очко"')
-            print('Если хотите сыграть в автоматы введите: "Автоматы"')
-            print('Если хотите выйти введите: "Выход"')
+        print(f'Ваш текущий баланс: {balance}')
+        if balance <= 0:
+            print('Вас выводит охрана')
+            input()
+            break
+        elif balance >= 100000:
+            print('Охрана заводит вас в отдалённую комнату, запирает дверь, избивает вас и отнимает все деньги. После чего выкидывает на улицу')
+            input()
+            break
+        print('Если хотите сыграть в очко введите: "Очко"')
+        print('Если хотите сыграть в автоматы введите: "Автоматы"')
+        print('Если хотите выйти введите: "Выход"')
+        try:    
             user_input = input('Выбор игры: ').lower()
-            if user_input == 'очко':
-                balance += Ochko(balance)
-            elif user_input == 'автоматы':
-                balance += Avtomat(balance)
-            elif user_input == 'выход':
-                print('Всего хорошего')
-                break
-            else:
-                print('Таких услуг мы пока не предоставляем')
         except TypeError:
             print('С вами всё в порядке? Вы не перебрали с алкоголем?')
+        if user_input == 'очко':
+            balance += Ochko(balance)
+        elif user_input == 'автоматы':
+            balance += Avtomat(balance)
+        elif user_input == 'выход':
+            print('Всего хорошего')
+            break
+        else:
+            print('Таких услуг мы пока не предоставляем')
+        
 
 if __name__ == "__main__":
     main(5000)
