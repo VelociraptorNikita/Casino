@@ -1,7 +1,5 @@
 import random
-import One_armed_bandit
 import Bet
-import Blackjack
 
 def main(balance):
     while True:
@@ -22,7 +20,7 @@ def main(balance):
         except TypeError:
             print('С вами всё в порядке? Вы не перебрали с алкоголем?')
         if user_input == 'очко':
-            balance += Blackjack.ochko(balance)
+            balance += ochko(balance)
         elif user_input == 'автоматы':
             balance += One_armed_bandit.avtomat(balance)
         elif user_input == 'выход':
