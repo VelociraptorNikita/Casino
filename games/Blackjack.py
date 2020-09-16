@@ -1,12 +1,14 @@
 import random
-import Bet
 
-def ochko(balance: int) -> int:
+def info() -> str:
+    return 'Очко'
+
+def game(input_data: dict) -> int:
     koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
     random.shuffle(koloda)
     print('Поиграем в очко')
-    stavka = make_a_bet(balance)
-    if stavka == 0:
+    stavka = input_data['bet']
+    if stavka <= 0:
         return 0
     countUser = 0
     countKrup = 0
@@ -37,4 +39,5 @@ def ochko(balance: int) -> int:
     else:
         print('Вы проиграли')
         return -stavka
+
     

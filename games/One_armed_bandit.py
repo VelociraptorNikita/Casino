@@ -1,11 +1,13 @@
-import Bet
 import random
 import time
 
-def avtomat(balance: int) -> int:
+def info() -> str:
+    return 'Автоматы'
+
+def game(input_data: dict) -> int:
     print('При совпадении трёх чисел вы получаете удвоенную ставку')
     print('Поиграем в автоматы')
-    stavka = make_a_bet(balance)
+    stavka = input_data['bet']
     if stavka == 0:
         return 0
     ch1 = random.randint(0, 6)
