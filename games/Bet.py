@@ -1,7 +1,7 @@
 def make_a_bet(balance: int) -> int:
     while True:
         try:
-            stavka = int(input('Сколько ставите?\n'))
+            stavka = int(input('Сколько денег вы хотите обменять в фишки?\n'))
         except (ValueError, TypeError):
             print('Следите за руками')
             return 0
