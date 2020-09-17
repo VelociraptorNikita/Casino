@@ -1,109 +1,45 @@
 import random
-import time
+from games import Bet
 
-def make_a_bet(balance: int) -> int:
-    while True:
-        try:
-            stavka = int(input('Сколько ставите?\n'))
-        except (ValueError, TypeError):
-            print('Следите за руками')
-            return 0
-        if 0 < stavka > balance:
-            print('Проверьте корректность вашей ставки')
-        else:
-            return stavka
+def load(dir) -> list:
+    from os import listdir as ls
+    py_files = [m[:-3] for m in ls(dir) if m[-3:]=='.py' and m[:-3] != 'Bet']
+    return [getattr(__import__(dir+'.'+m), m) for m in py_files]
 
-def Avtomat(balance: int) -> int:
-    print('При совпадении трёх чисел вы получаете удвоенную ставку')
-    print('Поиграем в автоматы')
-    stavka = make_a_bet(balance)
-    if stavka == 0:
-        return 0
-    ch1 = random.randint(0, 6)
-    ch2 = random.randint(0, 6)
-    ch3 = random.randint(0, 6)
-    print(f'Первое число: {ch1}')
-    time.sleep(2)
-    print(f'Второе число: {ch2}')
-    time.sleep(2)
-    print(f'Третье число: {ch3}')
-    time.sleep(1)
-    if ch1 == ch2 == ch3:
-        k = 1.4 + ch1/10
-        print('Поздравляю, вы победили')
-        return stavka * k
-    else:
-        print('В этот раз не повезло')
-        return -stavka
-          
-        
-def Ochko(balance: int) -> int:
-    koloda = [6, 7, 8, 9, 10, 2, 3, 4, 11] * 4
-    random.shuffle(koloda)
-    print('Поиграем в очко')
-    stavka = make_a_bet(balance)
-    if stavka == 0:
-        return 0
-    countUser = 0
-    countKrup = 0
-    while True:
-        user_input = input('Будете брать карту? д/н\n').lower()
-        if user_input in ('д', 'да') and len(koloda) > 0:
-            current = koloda.pop()
-            print(f'Вам попалась карта дотоинством {current}')
-            countUser += current
-            print(f'У вас {countUser} очков')
-        elif user_input in ('н', 'не', 'нет'):
-            print(f'У вас {countUser} очков и вы закончили игру')
-            break
-        else:
-            print('Я не понял вас')
-    while countKrup < 17:
-        countKrup += koloda.pop()
-    print(f'Счёт крупье: {countKrup}')
-    if countUser > 21:
-        print('Вы проиграли, у вас перебор')
-        return -stavka
-    elif countKrup > 21:
-        print('Вы выиграли, у крупье перебор')
-        return stavka
-    elif countUser > countKrup:
-        print('Вы выиграли')
-        return stavka
-    else:
-        print('Вы проиграли')
-        return -stavka
-    
+object_to_function = {'balance': 0, 'bet': 0}
+list_games = load('games')
+dict_games = {}
+for module in list_games:
+  dict_games[module] = module.info()
 
 
-def main(balance):
-    while True:
-        print(f'Ваш текущий баланс: {balance}')
-        if balance <= 0:
-            print('Вас выводит охрана')
-            input()
-            break
-        elif balance >= 100000:
+def main(input_data: dict):
+    while input_data['balance'] > 0:
+        print(f'Ваш текущий баланс: {input_data["balance"]}')
+        if input_data['balance'] >= 100000:
             print('Охрана заводит вас в отдалённую комнату, запирает дверь, избивает вас и отнимает все деньги. После чего выкидывает на улицу')
             input()
             break
-        print('Если хотите сыграть в очко введите: "Очко"')
-        print('Если хотите сыграть в автоматы введите: "Автоматы"')
+        print('Список игр: ')
+        for game in dict_games.values():
+            print(game)
         print('Если хотите выйти введите: "Выход"')
-        try:    
-            user_input = input('Выбор игры: ').lower()
+        try:
+            user_input = input('Выбор игры: ').title().strip()
         except TypeError:
             print('С вами всё в порядке? Вы не перебрали с алкоголем?')
-        if user_input == 'очко':
-            balance += Ochko(balance)
-        elif user_input == 'автоматы':
-            balance += Avtomat(balance)
-        elif user_input == 'выход':
+        for module, info in dict_games.items():
+            if info == user_input:
+                input_data['bet'] = Bet.make_a_bet(input_data['balance'])
+                input_data['balance'] += module.game(input_data)
+                break
+        if user_input == 'выход':
             print('Всего хорошего')
             break
-        else:
-            print('Таких услуг мы пока не предоставляем')
-        
+    else:
+        print('Вас выводит охрана')
+        input()
 
 if __name__ == "__main__":
-    main(5000)
+    object_to_function['balance'] = 5000
+    main(object_to_function)
