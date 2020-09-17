@@ -25,12 +25,12 @@ def main(input_data: dict):
             print(game)
         print('Если хотите выйти введите: "Выход"')
         try:
-            user_input = input('Выбор игры: ').title()
+            user_input = input('Выбор игры: ').title().strip()
         except TypeError:
             print('С вами всё в порядке? Вы не перебрали с алкоголем?')
-        input_data['bet'] = Bet.make_a_bet(input_data['balance'])
         for module, info in dict_games.items():
             if info == user_input:
+                input_data['bet'] = Bet.make_a_bet(input_data['balance'])
                 input_data['balance'] += module.game(input_data)
                 break
         if user_input == 'выход':
