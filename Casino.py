@@ -40,7 +40,6 @@ def main(input_data: dict):
         print('Вас выводит охрана')
         input()
 
-
 if __name__ == "__main__":
     object_to_function['balance'] = 5000
     main(object_to_function)
